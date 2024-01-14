@@ -1,0 +1,15 @@
+package {{.PkgName}}
+
+import "github.com/gin-gonic/gin"
+
+func Register(r gin.IRouter) {
+	{{.PkgName}}Gp := r.Group("/{{.PkgName}}")
+	{
+		{{.PkgName}}Handler := New{{.Name}}Server(New{{.Name}}Service(New{{.Name}}Repo(nil)))
+		{{.PkgName}}Gp.POST("/list", {{.PkgName}}Handler.List)
+		{{.PkgName}}Gp.POST("/details", {{.PkgName}}Handler.Details)
+		{{.PkgName}}Gp.POST("/add", {{.PkgName}}Handler.Add)
+		{{.PkgName}}Gp.POST("/update", {{.PkgName}}Handler.Update)
+		{{.PkgName}}Gp.POST("/delete", {{.PkgName}}Handler.Delete)
+	}
+}

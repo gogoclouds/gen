@@ -1,0 +1,21 @@
+package {{.PkgName}}
+
+import (
+	"context"
+)
+
+type I{{.Name}}Repo interface {
+	Find(ctx context.Context, req *{{.Name}}ListRequest) (*{{.Name}}ListResponse, error)
+}
+
+type {{.Name}}Service struct {
+	repo I{{.Name}}Repo
+}
+
+func New{{.Name}}Service(repo I{{.Name}}Repo) *{{.Name}}Service {
+	return &{{.Name}}Service{repo: repo}
+}
+
+func (s *{{.Name}}Service) List(ctx context.Context, req *{{.Name}}ListRequest) (*{{.Name}}ListResponse, error) {
+	return s.repo.Find(ctx, req)
+}

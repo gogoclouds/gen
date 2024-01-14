@@ -1,0 +1,19 @@
+package {{.PkgName}}
+
+import (
+    "context"
+	"gorm.io/gorm"
+)
+
+type {{.Name}}Repo struct {
+	db *gorm.DB
+	// q *qurey.Query
+}
+
+func New{{.Name}}Repo(db *gorm.DB) *{{.Name}}Repo {
+	return &{{.Name}}Repo{db: db}
+}
+
+func (r *{{.Name}}Repo) Find(ctx context.Context, req *{{.Name}}ListRequest) (*{{.Name}}ListResponse, error) {
+	return nil, nil
+}

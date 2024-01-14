@@ -1,0 +1,38 @@
+package {{.PkgName}}
+
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+type {{.Name}}Server struct {
+	svc *{{.Name}}Service
+}
+
+func New{{.Name}}Server(svc *{{.Name}}Service) *{{.Name}}Server {
+	return &{{.Name}}Server{svc: svc}
+}
+
+func (h *{{.Name}}Server) List(ctx *gin.Context) {
+	req := new({{.Name}}ListRequest)
+	if err := ctx.ShouldBind(req); err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code": http.StatusInternalServerError,
+			"msg":  err.Error(),
+		})
+		return
+	}
+	list, err := h.svc.List(ctx, req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, gin.H{
+			"code": http.StatusInternalServerError,
+			"msg":  err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": http.StatusInternalServerError,
+		"msg":  "success",
+		"data": list,
+	})
+}
