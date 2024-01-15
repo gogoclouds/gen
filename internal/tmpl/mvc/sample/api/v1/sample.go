@@ -1,16 +1,24 @@
 package v1
 
-type SampleListRequest struct{}
+import (
+	"github.com/gogoclouds/gen/api/body"
+	"github.com/gogoclouds/gen/internal/model"
+)
+
+type SampleListRequest struct {
+	body.PageRequest
+}
 
 type SampleListResponse struct {
-	Total int `json:"total"`
+	body.PageData[*model.SysUser]
 }
 
 type SampleRequest struct {
-	ID int64 `json:"id"`
+	ID uint32 `json:"id"`
 }
 
 type SampleResponse struct {
+	*model.SysUser
 }
 
 type SampleCreateRequest struct {
@@ -20,14 +28,14 @@ type SampleCreateResponse struct {
 }
 
 type SampleUpdateRequest struct {
-	ID int64 `json:"id"`
+	ID uint32 `json:"id"`
 }
 
 type SampleUpdateResponse struct {
 }
 
 type SampleDeleteRequest struct {
-	ID int64 `json:"id"`
+	ID uint32 `json:"id"`
 }
 
 type SampleDeleteResponse struct {
