@@ -1,38 +1,91 @@
-package {{.PkgName}}
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"{{.Project}}/api"
+	"{{.Project}}/api/codes"
+	"{{.Project}}/api/status"
+	"{{.Project}}/internal/{{.File}}/api/{{.ApiVersion}}"
+	"{{.Project}}/internal/{{.File}}/service"
+	"log/slog"
 )
 
-type {{.Name}}Server struct {
-	svc *{{.Name}}Service
+type {{.Struct}}Server struct {
+	svc *service.{{.Struct}}Service
 }
 
-func New{{.Name}}Server(svc *{{.Name}}Service) *{{.Name}}Server {
-	return &{{.Name}}Server{svc: svc}
+func New{{.Struct}}Server(svc *service.{{.Struct}}Service) *{{.Struct}}Server {
+	return &{{.Struct}}Server{svc: svc}
 }
 
-func (h *{{.Name}}Server) List(ctx *gin.Context) {
-	req := new({{.Name}}ListRequest)
+func (h *{{.Struct}}Server) List(ctx *gin.Context) {
+	req := new({{.ApiVersion}}.{{.Struct}}ListRequest)
 	if err := ctx.ShouldBind(req); err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"code": http.StatusInternalServerError,
-			"msg":  err.Error(),
-		})
+		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
 		return
 	}
 	list, err := h.svc.List(ctx, req)
 	if err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
-			"code": http.StatusInternalServerError,
-			"msg":  err.Error(),
-		})
+		slog.ErrorContext(ctx, "List error", slog.String("err", err.Error()))
+		api.Fail(ctx, status.New(codes.Internal))
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{
-		"code": http.StatusInternalServerError,
-		"msg":  "success",
-		"data": list,
-	})
+	api.OK(ctx, list)
+}
+
+func (h *{{.Struct}}Server) Details(ctx *gin.Context) {
+	req := new({{.ApiVersion}}.{{.Struct}}Request)
+	if err := ctx.ShouldBind(req); err != nil {
+		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
+		return
+	}
+	data, err := h.svc.GetDetails(ctx, req)
+	if err != nil {
+		slog.ErrorContext(ctx, "Details error", slog.String("err", err.Error()))
+		api.Fail(ctx, status.New(codes.Internal))
+		return
+	}
+	api.OK(ctx, data)
+}
+
+func (h *{{.Struct}}Server) Add(ctx *gin.Context) {
+	req := new({{.ApiVersion}}.{{.Struct}}CreateRequest)
+	if err := ctx.ShouldBind(req); err != nil {
+		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
+		return
+	}
+	if err := h.svc.Add(ctx, req); err != nil {
+		slog.ErrorContext(ctx, "Add error", slog.String("err", err.Error()))
+		api.Fail(ctx, status.New(codes.Internal))
+		return
+	}
+	api.OK(ctx, gin.H{})
+}
+
+func (h *{{.Struct}}Server) Update(ctx *gin.Context) {
+	req := new({{.ApiVersion}}.{{.Struct}}UpdateRequest)
+	if err := ctx.ShouldBind(req); err != nil {
+		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
+		return
+	}
+	if err := h.svc.Update(ctx, req); err != nil {
+		slog.ErrorContext(ctx, "Update error", slog.String("err", err.Error()))
+		api.Fail(ctx, status.New(codes.Internal))
+		return
+	}
+	api.OK(ctx, gin.H{})
+}
+
+func (h *{{.Struct}}Server) Delete(ctx *gin.Context) {
+	req := new({{.ApiVersion}}.{{.Struct}}DeleteRequest)
+	if err := ctx.ShouldBind(req); err != nil {
+		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
+		return
+	}
+	if err := h.svc.Delete(ctx, req); err != nil {
+		slog.ErrorContext(ctx, "Delete error", slog.String("err", err.Error()))
+		api.Fail(ctx, status.New(codes.Internal))
+		return
+	}
+	api.OK(ctx, gin.H{})
 }

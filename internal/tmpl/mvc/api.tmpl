@@ -1,5 +1,42 @@
-package {{.PkgName}}
+package {{.ApiVersion}}
 
-type {{.Name}}ListRequest struct{}
+import (
+	"{{.Project}}/api/body"
+	"{{.Project}}/internal/model"
+)
 
-type {{.Name}}ListResponse struct{}
+type {{.Struct}}ListRequest struct {
+	body.PageRequest
+}
+
+type {{.Struct}}ListResponse struct {
+	body.PageData[*model.{{.Model}}]
+}
+
+type {{.Struct}}Request struct {
+	ID uint32 `json:"id"`
+}
+
+type {{.Struct}}Response struct {
+	*model.{{.Model}}
+}
+
+type {{.Struct}}CreateRequest struct {
+}
+
+type {{.Struct}}CreateResponse struct {
+}
+
+type {{.Struct}}UpdateRequest struct {
+	ID uint32 `json:"id"`
+}
+
+type {{.Struct}}UpdateResponse struct {
+}
+
+type {{.Struct}}DeleteRequest struct {
+	ID uint32 `json:"id"`
+}
+
+type {{.Struct}}DeleteResponse struct {
+}

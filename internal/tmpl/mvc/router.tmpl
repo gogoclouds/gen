@@ -1,15 +1,20 @@
-package {{.PkgName}}
+package {{.File}}
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"{{.Project}}/internal/{{.File}}/handler"
+	"{{.Project}}/internal/{{.File}}/repo"
+	"{{.Project}}/internal/{{.File}}/service"
+)
 
 func Register(r gin.IRouter) {
-	{{.PkgName}}Gp := r.Group("/{{.PkgName}}")
+	{{.File}}Gp := r.Group("/{{.ApiVersion}}/{{.File}}")
 	{
-		{{.PkgName}}Handler := New{{.Name}}Server(New{{.Name}}Service(New{{.Name}}Repo(nil)))
-		{{.PkgName}}Gp.POST("/list", {{.PkgName}}Handler.List)
-		{{.PkgName}}Gp.POST("/details", {{.PkgName}}Handler.Details)
-		{{.PkgName}}Gp.POST("/add", {{.PkgName}}Handler.Add)
-		{{.PkgName}}Gp.POST("/update", {{.PkgName}}Handler.Update)
-		{{.PkgName}}Gp.POST("/delete", {{.PkgName}}Handler.Delete)
+		{{.File}}Handler := handler.New{{.Struct}}Server(service.New{{.Struct}}Service(repo.New{{.Struct}}Repo(nil)))
+		{{.File}}Gp.POST("/list", {{.File}}Handler.List)
+		{{.File}}Gp.POST("/details", {{.File}}Handler.Details)
+		{{.File}}Gp.POST("/add", {{.File}}Handler.Add)
+		{{.File}}Gp.POST("/update", {{.File}}Handler.Update)
+		{{.File}}Gp.POST("/delete", {{.File}}Handler.Delete)
 	}
 }

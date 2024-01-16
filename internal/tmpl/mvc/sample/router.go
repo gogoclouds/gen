@@ -8,13 +8,13 @@ import (
 )
 
 func Register(r gin.IRouter) {
-	sampleGp := r.Group("/sample")
+	userGp := r.Group("/user")
 	{
-		sampleHandler := handler.NewSampleServer(service.NewSampleService(repo.NewSampleRepo(nil)))
-		sampleGp.POST("/list", sampleHandler.List)
-		sampleGp.POST("/details", sampleHandler.Details)
-		sampleGp.POST("/add", sampleHandler.Add)
-		sampleGp.POST("/update", sampleHandler.Update)
-		sampleGp.POST("/delete", sampleHandler.Delete)
+		userHandler := handler.NewUserServer(service.NewUserService(repo.NewUserRepo(nil)))
+		userGp.POST("/list", userHandler.List)
+		userGp.POST("/details", userHandler.Details)
+		userGp.POST("/add", userHandler.Add)
+		userGp.POST("/update", userHandler.Update)
+		userGp.POST("/delete", userHandler.Delete)
 	}
 }

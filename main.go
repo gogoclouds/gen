@@ -10,20 +10,35 @@ import (
 
 func main() {
 	var module = struct {
-		Name       string
-		StructName string
-		FileName   string
-		PkgName    string
+		Project string // github.com/gogoclouds/gen
+		Struct  string // User
+		// 可选
+		Path       string // ./internal
+		ApiVersion string // v1
+		File       string // user
+		Model      string // sql table
 	}{
-		Name: "UserInfo",
+		Path:    "./internal",
+		Project: "github.com/gogoclouds/gen",
+		Struct:  "User",
+		Model:   "SysUser",
 	}
-	module.PkgName = strings.ToLower(module.Name)
+	if module.ApiVersion == "" {
+		module.ApiVersion = "v1"
+	}
+	if module.File == "" {
+		module.File = strings.ToLower(module.Struct)
+	}
+	if module.Model == "" {
+		module.Model = module.Struct
+	}
 
 	filepaths := []string{
-		"./tmpl/repo.tmpl",
-		"./tmpl/service.tmpl",
-		"./tmpl/server.tmpl",
-		"./tmpl/api.tmpl",
+		"./internal/tmpl/mvc/router.tmpl",
+		"./internal/tmpl/mvc/api.tmpl",
+		"./internal/tmpl/mvc/server.tmpl",
+		"./internal/tmpl/mvc/service.tmpl",
+		"./internal/tmpl/mvc/repo.tmpl",
 	}
 	for _, fp := range filepaths {
 		tp, err := template.ParseFiles(fp)
@@ -32,8 +47,20 @@ func main() {
 			return
 		}
 
+		filename := module.File + ".go"
+		dir := filepath.Join(module.Path, module.File) // ./internal/user
 		fType := strings.ToLower(strings.TrimSuffix(filepath.Base(fp), filepath.Ext(fp)))
-		f, err := pkg.MustOpen(pkg.CamelCaseToUdnderscore(module.Name)+"_"+fType+".go", strings.ToLower(module.Name))
+		switch fType {
+		case "router":
+			filename = "router.go"
+		case "api":
+			dir = filepath.Join(dir, fType, module.ApiVersion)
+		case "server":
+			dir = filepath.Join(dir, "handler")
+		default:
+			dir = filepath.Join(dir, fType)
+		}
+		f, err := pkg.MustOpen(filename, dir)
 		if err != nil {
 			panic(err)
 		}

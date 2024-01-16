@@ -10,16 +10,16 @@ import (
 	"log/slog"
 )
 
-type SampleServer struct {
-	svc *service.SampleService
+type UserServer struct {
+	svc *service.UserService
 }
 
-func NewSampleServer(svc *service.SampleService) *SampleServer {
-	return &SampleServer{svc: svc}
+func NewUserServer(svc *service.UserService) *UserServer {
+	return &UserServer{svc: svc}
 }
 
-func (h *SampleServer) List(ctx *gin.Context) {
-	req := new(v1.SampleListRequest)
+func (h *UserServer) List(ctx *gin.Context) {
+	req := new(v1.UserListRequest)
 	if err := ctx.ShouldBind(req); err != nil {
 		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
 		return
@@ -33,8 +33,8 @@ func (h *SampleServer) List(ctx *gin.Context) {
 	api.OK(ctx, list)
 }
 
-func (h *SampleServer) Details(ctx *gin.Context) {
-	req := new(v1.SampleRequest)
+func (h *UserServer) Details(ctx *gin.Context) {
+	req := new(v1.UserRequest)
 	if err := ctx.ShouldBind(req); err != nil {
 		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
 		return
@@ -48,8 +48,8 @@ func (h *SampleServer) Details(ctx *gin.Context) {
 	api.OK(ctx, data)
 }
 
-func (h *SampleServer) Add(ctx *gin.Context) {
-	req := new(v1.SampleCreateRequest)
+func (h *UserServer) Add(ctx *gin.Context) {
+	req := new(v1.UserCreateRequest)
 	if err := ctx.ShouldBind(req); err != nil {
 		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
 		return
@@ -62,8 +62,8 @@ func (h *SampleServer) Add(ctx *gin.Context) {
 	api.OK(ctx, gin.H{})
 }
 
-func (h *SampleServer) Update(ctx *gin.Context) {
-	req := new(v1.SampleUpdateRequest)
+func (h *UserServer) Update(ctx *gin.Context) {
+	req := new(v1.UserUpdateRequest)
 	if err := ctx.ShouldBind(req); err != nil {
 		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
 		return
@@ -76,8 +76,8 @@ func (h *SampleServer) Update(ctx *gin.Context) {
 	api.OK(ctx, gin.H{})
 }
 
-func (h *SampleServer) Delete(ctx *gin.Context) {
-	req := new(v1.SampleDeleteRequest)
+func (h *UserServer) Delete(ctx *gin.Context) {
+	req := new(v1.UserDeleteRequest)
 	if err := ctx.ShouldBind(req); err != nil {
 		api.Fail(ctx, status.New(codes.BadRequest).WithError(err))
 		return
